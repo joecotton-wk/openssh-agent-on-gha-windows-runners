@@ -1,0 +1,28 @@
+name: This is my cool build
+run-name: Build and test by ${{ github.actor }}
+on:
+  push:
+    branches:
+      - "master"
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  run-build:
+    runs-on: windows-2022
+    steps:
+      - name: Do we have OpenSSH
+        run: Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
+        shell: pwsh
+      - name: Check the SSH agent service exists
+        run: Get-Service ssh-agent
+        shell: pwsh
+      - name: Start the SSH agent
+        run: Start-Service ssh-agent
+        shell: pwsh
+      - name: Check the SSH agent is running
+        run: Get-Service ssh-agent
+        shell: pwsh
